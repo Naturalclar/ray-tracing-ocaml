@@ -6,6 +6,8 @@ let v1 = Vec3.create 1. 2. 3.
 let v2 = Vec3.create 2. 4. 5.
 
 let r = Ray.create v1 (Vec3.create 1. 0. 0.)
+
+let sphere = Sphere.create (Vec3.create 0. 0. (-1.)) 0.5
 let tests = "test suite for sum" >::: [
   "Vec3 creating" >:: (fun _ -> 
     assert_equal v1.x 1.; 
@@ -62,9 +64,24 @@ let tests = "test suite for sum" >::: [
     assert_equal (r |> Ray.at 2. ) (Vec3.create 3. 2. 3.)
   );
 
-  "Sphere hit" >:: (fun _ ->
-    assert_equal (Sphere.hit r (Sphere.create v1 0.)) 0.1
+  "Sphere hit intersect out" >:: (fun _ ->
+    assert_equal (Sphere.hit 
+                    (Ray.create
+                      (Vec3.create 0. 1. 0.)
+                      (Vec3.create 0. 0. (-1.))
+                    ) sphere)
+                    None
   );
+
+  "Sphere hit intersect reverse" >:: (fun _ ->
+    assert_equal (Sphere.hit 
+                    (Ray.create
+                      (Vec3.create 0. 1. 0.)
+                      (Vec3.create 0. 0. 1.)
+                    ) sphere)
+                    None
+  )
+
 ]
 
 let _ = run_test_tt_main tests
