@@ -1,0 +1,4 @@
+(test
+ (name raytrace)
+ (libraries raytrace ounit2)
+)
