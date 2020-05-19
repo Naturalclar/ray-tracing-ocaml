@@ -58,9 +58,12 @@ let tests = "test suite for sum" >::: [
   assert_equal (Vec3.unit_vector v1) (v1 /| (sqrt 14.))
   );
 
-
   "Ray at" >:: (fun _ ->
     assert_equal (r |> Ray.at 2. ) (Vec3.create 3. 2. 3.)
+  );
+
+  "Sphere hit" >:: (fun _ ->
+    assert_equal (Sphere.hit r (Sphere.create v1 0.)) 0.1
   );
 ]
 

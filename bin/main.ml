@@ -2,11 +2,21 @@ open Base
 open Stdio
 open Raytrace
 open Raytrace.Vec3
+open Stdlib
+
+let sphere = Sphere.create (Vec3.create 0. 0. (-1.)) 0.5
 
 let ray_color (r: Ray.t) =
-  let unit_direction = r.direction in
-  let t = 0.5 *. (unit_direction.y +. 1.0) in
-  Vec3.lerp (Vec3.create 1. 1. 1.) (Vec3.create 0.5 0.7 1.0) t
+  let s = Sphere.hit r sphere in
+  if Float.ceil(s) > 0.
+    then
+      let n = Vec3.unit_vector ((Ray.at s r) -| (Vec3.create 0. 0. (-1.))) in
+      let color = (n +| (Vec3.create 1. 1. 1.)) *| 0.5 in
+      Vec3.create (color.x) (color.y) (color.z)
+    else
+      let unit_direction = r.direction in
+      let t = 0.5 *. (unit_direction.y +. 1.0) in
+      Vec3.lerp (Vec3.create 1. 1. 1.) (Vec3.create 0.5 0.7 1.0) t
 
 let float_to_color f = Float.to_int(255.999 *. f)
 
