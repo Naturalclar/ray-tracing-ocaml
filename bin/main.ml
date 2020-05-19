@@ -4,16 +4,16 @@ open Raytrace
 open Raytrace.Vec3
 open Stdlib
 
-let sphere = Sphere.create (Vec3.create 0. 0. (-1.)) 0.5
+
 
 let ray_color (r: Ray.t) =
-  let s = Sphere.hit r sphere in
-  if Float.ceil(s) > 0.
-    then
-      let n = Vec3.unit_vector ((Ray.at s r) -| (Vec3.create 0. 0. (-1.))) in
+  let sphere = Sphere.create (Vec3.create 0. 0. (-1.)) 0.5 in
+  match Sphere.hit r sphere with
+    | Some hit_record ->
+      let n = Vec3.unit_vector ((Ray.at hit_record.t r) -| (Vec3.create 0. 0. (-1.))) in
       let color = (n +| (Vec3.create 1. 1. 1.)) *| 0.5 in
       Vec3.create (color.x) (color.y) (color.z)
-    else
+    | None -> 
       let unit_direction = r.direction in
       let t = 0.5 *. (unit_direction.y +. 1.0) in
       Vec3.lerp (Vec3.create 1. 1. 1.) (Vec3.create 0.5 0.7 1.0) t
