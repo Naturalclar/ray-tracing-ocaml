@@ -43,6 +43,13 @@ let tests = "test suite for sum" >::: [
   assert_equal (Vec3.negate v1) (Vec3.create (-1.) 2. 3.)
   );
 
+  "Vec3 cross" >:: (fun _ ->
+  assert_equal (Vec3.cross v1 v2) (Vec3.create (-2.) 1. 0.)
+  );
+
+  "Vec3 unit vector" >:: (fun _ ->
+  assert_equal (Vec3.unit_vector v1) (v1 /| (sqrt 14.))
+  );
 ]
 
 let _ = run_test_tt_main tests
