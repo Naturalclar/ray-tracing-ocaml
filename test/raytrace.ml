@@ -39,6 +39,10 @@ let tests = "test suite for sum" >::: [
   assert_equal (Vec3.length v1) (sqrt 14.)
   );
 
+  "Vec3 negate" >:: (fun _ ->
+  assert_equal (Vec3.negate v1) (Vec3.create (-1.) 2. 3.)
+  );
+
 ]
 
 let _ = run_test_tt_main tests

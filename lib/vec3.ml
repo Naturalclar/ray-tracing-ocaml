@@ -14,23 +14,26 @@ let ( -| ) v1 v2 = {
   z= v1.z -. v2.z
 }
 
-let ( *| ) v1 s = {
-  x= v1.x *. s;
-  y= v1.y *. s;
-  z= v1.z *. s
+let ( *| ) v s = {
+  x= v.x *. s;
+  y= v.y *. s;
+  z= v.z *. s
 }
 
-let ( /| ) v1 s = {
-  x= v1.x /. s;
-  y= v1.y /. s;
-  z= v1.z /. s
+let ( /| ) v s = {
+  x= v.x /. s;
+  y= v.y /. s;
+  z= v.z /. s
 }
 
 let dot v1 v2 = 
   v1.x *. v2.x +. v1.y *. v2.y +. v1.z *. v2.z
 
-let length_square v1 =
-  dot v1 v1
+let length_square v =
+  dot v v
 
-let length v1 = 
-  sqrt (length_square v1)
+let length v = 
+  sqrt (length_square v)
+
+let negate v =
+  {x = (-.v.x); y=v.y; z=v.z}
