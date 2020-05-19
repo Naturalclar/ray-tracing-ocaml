@@ -1,9 +1,27 @@
 open Base
 open Stdio
+open Raytrace
+open Raytrace.Vec3
+
+let ray_color (r: Ray.t) =
+  let unit_direction = r.direction in
+  let t = 0.5 *. (unit_direction.y +. 1.0) in
+  Vec3.lerp (Vec3.create 1. 1. 1.) (Vec3.create 0.5 0.7 1.0) t
+
+let float_to_color f = Float.to_int(255.999 *. f)
 
 let () =
-  let width = 200
-  and height = 100 in 
+  let aspect_ratio = 16.0 /. 9.0 in
+  let width = 384 in
+  let height = Float.to_int(Float.of_int(width) /. aspect_ratio) in
+  let viewport_height = 2.0 in
+  let viewport_width = aspect_ratio *. viewport_height in
+  let focal_length = 1.0 in 
+
+  let origin = Vec3.create 0. 0. 0. in
+  let horizontal = Vec3.create viewport_width 0. 0. in
+  let vertical = Vec3.create 0. viewport_height 0. in
+  let lower_left_corner = origin -| horizontal /| 2. -| vertical /| 2. -| Vec3.create 0. 0. focal_length in
   let file = Out_channel.create "image.ppm" in
   let _ = Out_channel.fprintf file "P3\n%d %d\n255\n" width height in
   (Sequence.cartesian_product
@@ -12,11 +30,9 @@ let () =
   )
   |> Sequence.iter
     ~f:(fun (j, i) -> 
-      let r = Float.of_int(i) /. Float.of_int(width)
-      and g = Float.of_int(j) /. Float.of_int(height)
-      and b = 0.2 in
-      let ir = Float.to_int(255.999 *. r) 
-      and ig = Float.to_int(255.999 *. g)
-      and ib = Float.to_int(255.999 *. b) in 
-      Out_channel.fprintf file "%d %d %d\n" ir ig ib
+      let u = Float.of_int(i) /. Float.of_int(width-1) in 
+      let v = Float.of_int(j) /. Float.of_int(height-1) in
+      let r = Ray.create origin (lower_left_corner +| horizontal *| u +| vertical *| v -| origin) in
+      let color = ray_color r in
+      Out_channel.fprintf file "%d %d %d\n" (float_to_color color.x) (float_to_color color.y) (float_to_color color.z)
     )

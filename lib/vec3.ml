@@ -45,6 +45,7 @@ let cross u v =
     z = u.x *. v.y -. u.y *. v.x
   }
 
+let lerp u v t = u *| (1. -. t) +| v *| t
 
 let unit_vector v = 
   v /| length v
